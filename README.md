@@ -4,7 +4,7 @@ This plugin for [Obsidian](https://obsidian.md/) generates index notes with link
 
 ## Usage
 
-Plugin add commands and setting for each type of index note.
+Plugin adds commands and setting for each type of index note.
 
 ### All used links
 
@@ -14,7 +14,7 @@ Vault had:
 - note B with link C
 - note C with link to B and non-existing note X
 
-Command with create an index note (check path in settings) with the content:
+Command will create an index note (check path in settings) with the content:
 
 ```
 2 [[B]]
