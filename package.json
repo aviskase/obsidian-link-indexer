@@ -1,13 +1,13 @@
 {
   "name": "obsidian-link-indexer",
   "author": "Yuliya Bagriy <aviskas@gmail.com>",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generate index notes for Obsidian with links based on various conditions",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
     "build": "rollup --config rollup.config.js",
-    "release": "standard-version"
+    "release": "standard-version -t ''"
   },
   "keywords": [
     "obsidian-md",
