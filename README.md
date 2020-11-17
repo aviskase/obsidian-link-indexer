@@ -30,6 +30,12 @@ Command will create an index note (check path in settings) with the content:
 | -- | -- |
 | 2 [[B]]<br><br>2 [[C]]<br><br>1 [[X]] | 2 [[B]]<br>2 [[C]]<br>1 [[X]] |
 
+**Link to files**. When "on" the output file will use wiki-links to files. Disable if you don\'t want to pollute graph with it.
+
+| on | off |
+| -- | -- |
+| 2 [[B]]<br>2 [[C]]<br>1 [[X]] | 2 B<br>2 C<br>1 X |
+
 
 ## Compatibility
 v0.0.1 was developed against Obsidian v0.9.12, but it may work in earlier versions (v0.9.7+).

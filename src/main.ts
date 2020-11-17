@@ -1,4 +1,4 @@
-import { Plugin, PluginSettingTab, Setting, Vault, normalizePath } from 'obsidian';
+import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile } from 'obsidian';
 
 interface IndexNode {
   count: number;
@@ -40,7 +40,7 @@ export default class LinkIndexer extends Plugin {
         } else {
           uniqueLinks[origin] = {
             count: 1,
-            link: originFile ? `[[${this.app.metadataCache.fileToLinktext(originFile, this.settings.allUsedLinksPath, true)}]]` : `[[${l.link}]]`
+            link: this.linkToFile(originFile, l.link)
           };
         }
       });
@@ -56,11 +56,17 @@ export default class LinkIndexer extends Plugin {
       this.app.vault.create(this.settings.allUsedLinksPath, content);
     }
   }
+
+  linkToFile(originFile: TFile, fallback: string) {
+    const rawLink = originFile ? this.app.metadataCache.fileToLinktext(originFile, this.settings.allUsedLinksPath, true) : fallback;
+    return this.settings.linkToFiles ? `[[${rawLink}]]` : rawLink;
+  }
 }
 
 class LinkIndexerSettings {
   allUsedLinksPath = './all_used_links.md';
   strictLineBreaks = true;
+  linkToFiles = true;
 }
 
 class LinkIndexerSettingTab extends PluginSettingTab {
@@ -93,6 +99,18 @@ class LinkIndexerSettingTab extends PluginSettingTab {
           .setValue(plugin.settings.strictLineBreaks)
           .onChange(async (value) => {
             plugin.settings.strictLineBreaks = value;
+            await plugin.saveData(plugin.settings);
+          })
+      );
+    
+    new Setting(containerEl)
+      .setName('Link to files')
+      .setDesc('When "on" the output file will use wiki-links to files. Disable if you don\'t want to pollute graph with it.')
+      .addToggle((value) => 
+        value
+          .setValue(plugin.settings.linkToFiles)
+          .onChange(async (value) => {
+            plugin.settings.linkToFiles = value;
             await plugin.saveData(plugin.settings);
           })
       );
