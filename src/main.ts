@@ -46,7 +46,8 @@ export default class LinkIndexer extends Plugin {
       });
     });
     const sortedLinks = Object.entries(uniqueLinks).sort((a, b) => b[1].count - a[1].count);
-    const content = sortedLinks.map((l) => `${l[1].count} ${l[1].link}`).join('\n\n');
+    const separator = this.settings.strictLineBreaks ? '\n\n' : '\n';
+    const content = sortedLinks.map((l) => `${l[1].count} ${l[1].link}`).join(separator);
     const exist = await this.app.vault.adapter.exists(normalizePath(this.settings.allUsedLinksPath), false);
     if (exist) {
       const p = this.app.vault.getAbstractFileByPath(normalizePath(this.settings.allUsedLinksPath));
@@ -59,6 +60,7 @@ export default class LinkIndexer extends Plugin {
 
 class LinkIndexerSettings {
   allUsedLinksPath = './all_used_links.md';
+  strictLineBreaks = true;
 }
 
 class LinkIndexerSettingTab extends PluginSettingTab {
@@ -82,6 +84,17 @@ class LinkIndexerSettingTab extends PluginSettingTab {
             await plugin.saveData(plugin.settings);
           })
       );
-
+    
+    new Setting(containerEl)
+      .setName('Strict line breaks')
+      .setDesc('Corresponds to the same Editor setting: "off" = one line break, "on" = two line breaks.')
+      .addToggle((value) => 
+        value
+          .setValue(plugin.settings.strictLineBreaks)
+          .onChange(async (value) => {
+            plugin.settings.strictLineBreaks = value;
+            await plugin.saveData(plugin.settings);
+          })
+      );
   }
 }

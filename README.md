@@ -22,6 +22,15 @@ Command will create an index note (check path in settings) with the content:
 1 [[X]]
 ```
 
+### Output options
+
+**Strict line breaks** corresponds to the same Editor setting: "off" = one line break, "on" = two line breaks.
+
+| on | off |
+| -- | -- |
+| 2 [[B]]<br><br>2 [[C]]<br><br>1 [[X]] | 2 [[B]]<br>2 [[C]]<br>1 [[X]] |
+
+
 ## Compatibility
 v0.0.1 was developed against Obsidian v0.9.12, but it may work in earlier versions (v0.9.7+).
 
