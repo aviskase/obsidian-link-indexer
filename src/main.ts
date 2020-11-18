@@ -1,4 +1,4 @@
-import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile } from 'obsidian';
+import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile, getLinkpath } from 'obsidian';
 
 interface IndexNode {
   count: number;
@@ -33,14 +33,15 @@ export default class LinkIndexer extends Plugin {
     files.forEach((f) => {
       const links = this.app.metadataCache.getFileCache(f).links;
       links?.forEach((l) => {
-        const originFile = this.app.metadataCache.getFirstLinkpathDest(l.link, f.path);
-        const origin = originFile ? originFile.path : l.link;
+        const link = getLinkpath(l.link);
+        const originFile = this.app.metadataCache.getFirstLinkpathDest(link, f.path);
+        const origin = originFile ? originFile.path : link;
         if (uniqueLinks[origin]) {
           uniqueLinks[origin].count += 1;
         } else {
           uniqueLinks[origin] = {
             count: 1,
-            link: this.linkToFile(originFile, l.link)
+            link: this.linkToFile(originFile, link)
           };
         }
       });
