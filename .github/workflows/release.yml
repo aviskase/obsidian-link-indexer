@@ -36,6 +36,7 @@ jobs:
               with:
                   tag_name: ${{ github.ref }}
                   release_name: ${{ github.ref }}
+                  body_path: CHANGELOG.md
                   draft: false
                   prerelease: false
             - name: Upload zip file
