@@ -1,4 +1,4 @@
-import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile, getLinkpath } from 'obsidian';
+import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile, getLinkpath, ReferenceCache } from 'obsidian';
 
 interface IndexNode {
   count: number;
@@ -31,20 +31,10 @@ export default class LinkIndexer extends Plugin {
     const uniqueLinks: Record<string, IndexNode> = {};
     const files = this.app.vault.getMarkdownFiles();
     files.forEach((f) => {
-      const links = this.app.metadataCache.getFileCache(f).links;
-      links?.forEach((l) => {
-        const link = getLinkpath(l.link);
-        const originFile = this.app.metadataCache.getFirstLinkpathDest(link, f.path);
-        const origin = originFile ? originFile.path : link;
-        if (uniqueLinks[origin]) {
-          uniqueLinks[origin].count += 1;
-        } else {
-          uniqueLinks[origin] = {
-            count: 1,
-            link: this.linkToFile(originFile, link)
-          };
-        }
-      });
+      this.grabLinks(uniqueLinks, f, this.app.metadataCache.getFileCache(f).links)
+      if (this.settings.includeEmbeds) {
+        this.grabLinks(uniqueLinks, f, this.app.metadataCache.getFileCache(f).embeds)
+      }
     });
     const sortedLinks = Object.entries(uniqueLinks).sort((a, b) => b[1].count - a[1].count);
     const separator = this.settings.strictLineBreaks ? '\n\n' : '\n';
@@ -62,11 +52,28 @@ export default class LinkIndexer extends Plugin {
     const rawLink = originFile ? this.app.metadataCache.fileToLinktext(originFile, this.settings.allUsedLinksPath, true) : fallback;
     return this.settings.linkToFiles ? `[[${rawLink}]]` : rawLink;
   }
+
+  grabLinks(uniqueLinks: Record<string, IndexNode>, f: TFile, links: ReferenceCache[]) {
+    links?.forEach((l) => {
+      const link = getLinkpath(l.link);
+      const originFile = this.app.metadataCache.getFirstLinkpathDest(link, f.path);
+      const origin = originFile ? originFile.path : link;
+      if (uniqueLinks[origin]) {
+        uniqueLinks[origin].count += 1;
+      } else {
+        uniqueLinks[origin] = {
+          count: 1,
+          link: this.linkToFile(originFile, link)
+        };
+      }
+    });
+  }
 }
 
 class LinkIndexerSettings {
   allUsedLinksPath = './all_used_links.md';
   strictLineBreaks = true;
+  includeEmbeds = true;
   linkToFiles = true;
 }
 
@@ -92,6 +99,19 @@ class LinkIndexerSettingTab extends PluginSettingTab {
           })
       );
     
+    new Setting(containerEl)
+      .setName('Include embeds')
+      .setDesc('When disabled, only direct links are counted. Enable to include embedded (trascluded) links.')
+      .addToggle((value) => 
+        value
+          .setValue(plugin.settings.includeEmbeds)
+          .onChange(async (value) => {
+            plugin.settings.includeEmbeds = value;
+            await plugin.saveData(plugin.settings);
+          })
+      );
+
+
     new Setting(containerEl)
       .setName('Strict line breaks')
       .setDesc('Corresponds to the same Editor setting: "off" = one line break, "on" = two line breaks.')
