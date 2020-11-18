@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.4...0.0.5) (2020-11-18)
+
+
+### Features
+
+* option to include embeds ([4d987ce](https://github.com/aviskase/obsidian-link-indexer/commit/4d987cebf83243e3a78f8e01edc8c2d9ebb4d251)), closes [#5](https://github.com/aviskase/obsidian-link-indexer/issues/5)
+
 ### [0.0.4](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.3...0.0.4) (2020-11-18)
 
 
