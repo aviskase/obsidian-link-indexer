@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.3...0.0.4) (2020-11-18)
+
+
+### Bug Fixes
+
+* aggregate header and block links ([2d9e182](https://github.com/aviskase/obsidian-link-indexer/commit/2d9e18211e3089499d64d98df7c8df7c38c9ebf2)), closes [#6](https://github.com/aviskase/obsidian-link-indexer/issues/6)
+
 ### [0.0.3](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.2...0.0.3) (2020-11-17)
 
 
