@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.6...0.0.7) (2020-11-24)
+
+
+### Bug Fixes
+
+* properly merge existing settings with new ([ca703a9](https://github.com/aviskase/obsidian-link-indexer/commit/ca703a9cc3a8384ee32f243339f67ec52a619491)), closes [#10](https://github.com/aviskase/obsidian-link-indexer/issues/10)
+
 ### [0.0.6](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.5...0.0.6) (2020-11-24)
 
 
