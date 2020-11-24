@@ -48,22 +48,21 @@ export default class LinkIndexer extends Plugin {
     }
   }
 
-  linkToFile(originFile: TFile, fallback: string) {
-    const rawLink = originFile ? this.app.metadataCache.fileToLinktext(originFile, this.settings.allUsedLinksPath, true) : fallback;
-    return this.settings.linkToFiles ? `[[${rawLink}]]` : rawLink;
-  }
-
   grabLinks(uniqueLinks: Record<string, IndexNode>, f: TFile, links: ReferenceCache[]) {
     links?.forEach((l) => {
       const link = getLinkpath(l.link);
       const originFile = this.app.metadataCache.getFirstLinkpathDest(link, f.path);
+      if (this.settings.nonexistentOnly && originFile) {
+        return;
+      }
       const origin = originFile ? originFile.path : link;
       if (uniqueLinks[origin]) {
         uniqueLinks[origin].count += 1;
       } else {
+        const rawLink = originFile ? this.app.metadataCache.fileToLinktext(originFile, this.settings.allUsedLinksPath, true) : link;
         uniqueLinks[origin] = {
           count: 1,
-          link: this.linkToFile(originFile, link)
+          link: this.settings.linkToFiles ? `[[${rawLink}]]` : rawLink
         };
       }
     });
@@ -75,6 +74,7 @@ class LinkIndexerSettings {
   strictLineBreaks = true;
   includeEmbeds = true;
   linkToFiles = true;
+  nonexistentOnly = false;
 }
 
 class LinkIndexerSettingTab extends PluginSettingTab {
@@ -107,6 +107,18 @@ class LinkIndexerSettingTab extends PluginSettingTab {
           .setValue(plugin.settings.includeEmbeds)
           .onChange(async (value) => {
             plugin.settings.includeEmbeds = value;
+            await plugin.saveData(plugin.settings);
+          })
+      );
+    
+    new Setting(containerEl)
+      .setName('Nonexistent files only')
+      .setDesc('When disabled, links to both existing and nonexisting files are counted.')
+      .addToggle((value) => 
+        value
+          .setValue(plugin.settings.nonexistentOnly)
+          .onChange(async (value) => {
+            plugin.settings.nonexistentOnly = value;
             await plugin.saveData(plugin.settings);
           })
       );

@@ -26,6 +26,8 @@ Command will create an index note (check path in settings) with the content:
 
 **Include embeds** counts both `![[file]]` and `[[file]]` links. When disabled, it will count only `[[file]]` links.
 
+**Nonexistent files only**. When enabled, the example above would generate a note with only `1 [[X]]`.
+
 **Strict line breaks** corresponds to the same Editor setting: "off" = one line break, "on" = two line breaks.
 
 | on | off |
