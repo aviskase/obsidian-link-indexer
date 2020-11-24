@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile, getLinkpath, ReferenceCache } from 'obsidian';
 
 interface IndexNode {
@@ -12,7 +13,7 @@ export default class LinkIndexer extends Plugin {
   onInit() {}
 
   async onload() {
-    this.settings = (await this.loadData()) || new LinkIndexerSettings();
+    this.settings = deepmerge(new LinkIndexerSettings(), (await this.loadData()));
     this.addSettingTab(new LinkIndexerSettingTab(this.app, this));
 
     this.addCommand({
