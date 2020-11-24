@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.5...0.0.6) (2020-11-24)
+
+
+### Features
+
+* nonexitent links filtering ([a52e98d](https://github.com/aviskase/obsidian-link-indexer/commit/a52e98db91b5ac0f8080c234a041446e4f1a9995)), closes [#1](https://github.com/aviskase/obsidian-link-indexer/issues/1)
+
 ### [0.0.5](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.4...0.0.5) (2020-11-18)
 
 
