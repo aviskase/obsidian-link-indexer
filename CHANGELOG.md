@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.7...0.1.0) (2020-11-28)
+
+
+### Features
+
+* add settings presets ([2be757a](https://github.com/aviskase/obsidian-link-indexer/commit/2be757ad73cf67dc67f5b9040ff88ded770dbf40)), closes [#12](https://github.com/aviskase/obsidian-link-indexer/issues/12)
+
 ### [0.0.7](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.6...0.0.7) (2020-11-24)
 
 
