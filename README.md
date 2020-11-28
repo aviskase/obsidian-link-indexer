@@ -2,11 +2,15 @@
 
 This plugin for [Obsidian](https://obsidian.md/) generates index notes with links based on various conditions.
 
+[Read changelog here](https://github.com/aviskase/obsidian-link-indexer/releases/latest).
+
 ## Usage
 
-Plugin adds commands and setting for each type of index note.
+Plugin adds commands and settings for each type of index note.
 
-### All used links
+You can have as many settings presets as you want, for example, one used links report for all data and another for non-existing files only.
+
+### Used links
 
 Vault had:
 
@@ -22,7 +26,7 @@ Command will create an index note (check path in settings) with the content:
 1 [[X]]
 ```
 
-### Output options
+#### Output options
 
 **Include embeds** counts both `![[file]]` and `[[file]]` links. When disabled, it will count only `[[file]]` links.
 
@@ -30,15 +34,41 @@ Command will create an index note (check path in settings) with the content:
 
 **Strict line breaks** corresponds to the same Editor setting: "off" = one line break, "on" = two line breaks.
 
-| on | off |
-| -- | -- |
-| 2 [[B]]<br><br>2 [[C]]<br><br>1 [[X]] | 2 [[B]]<br>2 [[C]]<br>1 [[X]] |
+On:
+
+```
+2 [[B]]
+
+2 [[C]]
+
+1 [[X]]
+```
+
+Off:
+
+```
+2 [[B]]
+2 [[C]]
+1 [[X]]
+```
 
 **Link to files**. When "on" the output file will use wiki-links to files. Disable if you don\'t want to pollute graph with it.
 
-| on | off |
-| -- | -- |
-| 2 [[B]]<br>2 [[C]]<br>1 [[X]] | 2 B<br>2 C<br>1 X |
+On:
+
+```
+2 [[B]]
+2 [[C]]
+1 [[X]]
+```
+
+Off:
+
+```
+2 B
+2 C
+1 X
+```
 
 
 ## Compatibility
