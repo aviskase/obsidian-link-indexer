@@ -9,6 +9,7 @@ interface IndexNode {
 export default class LinkIndexer extends Plugin {
   settings: LinkIndexerSettings;
   vault: Vault;
+  globalExcludes: string[]
 
   onInit() {}
 
@@ -35,7 +36,9 @@ export default class LinkIndexer extends Plugin {
 
   reloadSettings() {
     this.removeOwnCommands();
+    this.globalExcludes = [];
     this.settings.usedLinks.forEach((r: UsedLinks) => {
+      this.globalExcludes.push(r.path);
       this.addCommand({
         id: `link-indexer:used-links:${r.name}`,
         name: `Used links - ${r.name}`,
@@ -79,7 +82,7 @@ export default class LinkIndexer extends Plugin {
   }
 
   isExcludedFrom(f: TFile) {
-    return this.settings.usedLinks.map((r) => r.path).includes(f.path);
+    return this.globalExcludes.includes(f.path);
   }
 
   grabLinks(uniqueLinks: Record<string, IndexNode>, f: TFile, links: ReferenceCache[], preset: UsedLinks) {
