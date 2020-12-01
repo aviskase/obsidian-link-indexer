@@ -63,7 +63,7 @@ export default class LinkIndexer extends Plugin {
 
     const files = this.app.vault.getMarkdownFiles();
     files.forEach((f) => {
-      if (this.isExcludedFrom(f)) return;
+      if (this.isExcluded(f, preset.excludeFromFilenames)) return;
       this.grabLinks(uniqueLinks, f, this.app.metadataCache.getFileCache(f).links, preset)
       if (preset.includeEmbeds) {
         this.grabLinks(uniqueLinks, f, this.app.metadataCache.getFileCache(f).embeds, preset)
@@ -81,15 +81,15 @@ export default class LinkIndexer extends Plugin {
     }
   }
 
-  isExcludedFrom(f: TFile) {
-    return this.globalExcludes.includes(f.path);
+  isExcluded(f: TFile, filenamePatterns: string[]) {
+    return this.globalExcludes.find((g) => pathEqual(g, f.path)) || filenamePatterns.some((p) => new RegExp(p).test(f.name));
   }
 
   grabLinks(uniqueLinks: Record<string, IndexNode>, f: TFile, links: ReferenceCache[], preset: UsedLinks) {
     links?.forEach((l) => {
       const link = getLinkpath(l.link);
       const originFile = this.app.metadataCache.getFirstLinkpathDest(link, f.path);
-      if (preset.nonexistentOnly && originFile) {
+      if (originFile && (preset.nonexistentOnly || this.isExcluded(originFile, preset.excludeToFilenames))) {
         return;
       }
       const origin = originFile ? originFile.path : link;
@@ -113,6 +113,8 @@ class UsedLinks {
   includeEmbeds = true;
   linkToFiles = true;
   nonexistentOnly = false;
+  excludeToFilenames: string[] = [];
+  excludeFromFilenames: string[] = [];
 
   constructor() {
     this.name = Date.now().toString();
@@ -213,6 +215,31 @@ class LinkIndexerSettingTab extends PluginSettingTab {
               await this.saveData({ refreshUI: false });
             })
         );
+      
+      new Setting(containerEl)
+        .setName('Exclude links from files')
+        .setDesc('Expects regex patterns. Checks for filename without path.')
+        .addTextArea((text) => 
+          text
+            .setValue(report.excludeFromFilenames.join('\n'))
+            .onChange(async (value) => {
+              report.excludeFromFilenames = value.split('\n').filter((v) => v);
+              await this.saveData({ refreshUI: false });
+            })
+        );
+      
+      new Setting(containerEl)
+        .setName('Exclude links to files')
+        .setDesc('Expects regex patterns. Checks for filename without path.')
+        .addTextArea((text) => 
+          text
+            .setValue(report.excludeToFilenames.join('\n'))
+            .onChange(async (value) => {
+              report.excludeToFilenames = value.split('\n').filter((v) => v);
+              await this.saveData({ refreshUI: false });
+            })
+        );
+      
       const deleteButton = new Setting(containerEl).addButton((extra) => {
         return extra.setButtonText('Delete preset').onClick(async() => {
           const index = plugin.settings.usedLinks.findIndex((r) => r.name === report.name);
@@ -242,4 +269,17 @@ class LinkIndexerSettingTab extends PluginSettingTab {
     plugin.reloadSettings();
     if (options.refreshUI) this.display();
   }
+}
+
+
+function pathEqual(a: string, b: string) {
+  if (a === b) return true
+
+  return removeDots(normalizePath(a)) === removeDots(normalizePath(b))
+}
+
+function removeDots(value: string) {
+  return value.replace(/\\/g, '/')
+    .replace(/^\.\//, '')
+    .replace(/\/\.\//, '/')
 }
