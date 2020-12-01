@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/aviskase/obsidian-link-indexer/compare/0.1.0...0.1.1) (2020-12-01)
+
+
+### Features
+
+* exclude based on filenames ([4a9a58e](https://github.com/aviskase/obsidian-link-indexer/commit/4a9a58e038901bcc9a35853fee646665db159d56)), partial support for [#11](https://github.com/aviskase/obsidian-link-indexer/issues/11)
+
 ## [0.1.0](https://github.com/aviskase/obsidian-link-indexer/compare/0.0.7...0.1.0) (2020-11-28)
 
 
