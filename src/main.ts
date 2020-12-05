@@ -1,4 +1,5 @@
 import deepmerge from 'deepmerge';
+import picomatch from 'picomatch';
 import { Plugin, PluginSettingTab, Setting, Vault, normalizePath, TFile, getLinkpath, ReferenceCache, Notice } from 'obsidian';
 
 interface IndexNode {
@@ -63,7 +64,7 @@ export default class LinkIndexer extends Plugin {
 
     const files = this.app.vault.getMarkdownFiles();
     files.forEach((f) => {
-      if (this.isExcluded(f, preset.excludeFromFilenames)) return;
+      if (this.isExcluded(f, preset.excludeFromFilenames, preset.excludeFromGlobs)) return;
       this.grabLinks(uniqueLinks, f, this.app.metadataCache.getFileCache(f).links, preset)
       if (preset.includeEmbeds) {
         this.grabLinks(uniqueLinks, f, this.app.metadataCache.getFileCache(f).embeds, preset)
@@ -81,15 +82,18 @@ export default class LinkIndexer extends Plugin {
     }
   }
 
-  isExcluded(f: TFile, filenamePatterns: string[]) {
-    return this.globalExcludes.find((g) => pathEqual(g, f.path)) || filenamePatterns.some((p) => new RegExp(p).test(f.name));
+  isExcluded(f: TFile, filenamePatterns: string[], globPatterns:  string[]) {
+    const isGloballyExcluded = this.globalExcludes.some((g) => pathEqual(g, f.path));
+    const isFilenameExcluded = filenamePatterns.some((p) => new RegExp(p).test(f.name));
+    const isGlobExcluded = picomatch.isMatch(f.path, globPatterns);
+    return isGloballyExcluded || isFilenameExcluded || isGlobExcluded;
   }
 
   grabLinks(uniqueLinks: Record<string, IndexNode>, f: TFile, links: ReferenceCache[], preset: UsedLinks) {
     links?.forEach((l) => {
       const link = getLinkpath(l.link);
       const originFile = this.app.metadataCache.getFirstLinkpathDest(link, f.path);
-      if (originFile && (preset.nonexistentOnly || this.isExcluded(originFile, preset.excludeToFilenames))) {
+      if (originFile && (preset.nonexistentOnly || this.isExcluded(originFile, preset.excludeToFilenames, preset.excludeToGlobs))) {
         return;
       }
       const origin = originFile ? originFile.path : link;
@@ -114,7 +118,9 @@ class UsedLinks {
   linkToFiles = true;
   nonexistentOnly = false;
   excludeToFilenames: string[] = [];
+  excludeToGlobs: string[] = [];
   excludeFromFilenames: string[] = [];
+  excludeFromGlobs: string[] = [];
 
   constructor() {
     this.name = Date.now().toString();
@@ -229,6 +235,18 @@ class LinkIndexerSettingTab extends PluginSettingTab {
         );
       
       new Setting(containerEl)
+        .setName('Exclude links from paths')
+        .setDesc('Expects path globs. Checks for file path including filename.')
+        .addTextArea((text) => 
+          text
+            .setValue(report.excludeFromGlobs.join('\n'))
+            .onChange(async (value) => {
+              report.excludeFromGlobs = value.split('\n').filter((v) => v);
+              await this.saveData({ refreshUI: false });
+            })
+        );
+      
+      new Setting(containerEl)
         .setName('Exclude links to files')
         .setDesc('Expects regex patterns. Checks for filename without path.')
         .addTextArea((text) => 
@@ -236,6 +254,18 @@ class LinkIndexerSettingTab extends PluginSettingTab {
             .setValue(report.excludeToFilenames.join('\n'))
             .onChange(async (value) => {
               report.excludeToFilenames = value.split('\n').filter((v) => v);
+              await this.saveData({ refreshUI: false });
+            })
+        );
+      
+      new Setting(containerEl)
+        .setName('Exclude links to paths')
+        .setDesc('Expects path globs. Checks for file path including filename.')
+        .addTextArea((text) => 
+          text
+            .setValue(report.excludeToGlobs.join('\n'))
+            .onChange(async (value) => {
+              report.excludeToGlobs = value.split('\n').filter((v) => v);
               await this.saveData({ refreshUI: false });
             })
         );

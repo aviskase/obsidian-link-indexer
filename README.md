@@ -94,6 +94,8 @@ If both exclude *from* and *to* are set to `B`, the the output will be:
 1 [[X]]
 ```
 
+**Exclude links from paths** and **Exclude links to paths** works similarly to filename exclusion, but accept glob patterns. Check [picomatch docs](https://www.npmjs.com/package/picomatch#globbing-features) for detailed information. Useful, when you want to exclude some directories, for example, exclude everything from directory *Dailies* is `Dailies/**/*`. 
+
 
 ## Compatibility
 v0.0.1 was developed against Obsidian v0.9.12, but it may work in earlier versions (v0.9.7+).
