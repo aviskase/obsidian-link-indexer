@@ -1,7 +1,7 @@
 {
   "name": "obsidian-link-indexer",
   "author": "Yuliya Bagriy <aviskas@gmail.com>",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Generate index notes for Obsidian with links based on various conditions",
   "main": "main.js",
   "scripts": {

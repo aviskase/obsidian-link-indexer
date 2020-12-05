@@ -3,7 +3,7 @@
   "name": "Link indexer",
   "description": "Generate index notes with links based on various conditions",
   "isDesktopOnly": false,
-  "version": "0.1.1",
+  "version": "1.0.0",
   "minAppVersion": "0.9.12",
   "author": "Yuliya Bagriy",
   "authorUrl": "https://github.com/aviskase",
