@@ -4,11 +4,15 @@ This plugin for [Obsidian](https://obsidian.md/) generates index notes with link
 
 [Read changelog here](https://github.com/aviskase/obsidian-link-indexer/releases/latest).
 
+WARNING: I'm no longer using this plugin myself ¯\\\_(ツ)_/¯
+
 ## Usage
 
 Plugin adds commands and settings for each type of index note.
 
 You can have as many settings presets as you want, for example, one used links report for all data and another for non-existing files only.
+
+To configure the plugin, go to plugin settins and add a preset with desired settings. After that you'll see a new command added to the palette with the name `Link indexer: Used links - {name of the preset}`.
 
 ### Used links
 
