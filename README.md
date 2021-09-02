@@ -12,7 +12,7 @@ Plugin adds commands and settings for each type of index note.
 
 You can have as many settings presets as you want, for example, one used links report for all data and another for non-existing files only.
 
-To configure the plugin, go to plugin settins and add a preset with desired settings. After that you'll see a new command added to the palette with the name `Link indexer: Used links - {name of the preset}`.
+To configure the plugin, go to plugin settings and add a preset with desired configuration. After that you'll see a new command added to the palette with the name `Link indexer: Used links - {name of the preset}`.
 
 ### Used links
 
